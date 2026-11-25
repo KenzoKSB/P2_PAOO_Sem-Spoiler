@@ -1,3 +1,4 @@
+
 const HOST = '192.168.1.9'
 const axios = require('axios')
 const express = require('express')
@@ -8,8 +9,21 @@ const palavrasProibidas = ['morre', 'final', 'assassino', 'traidor']
 
 const funcoes = {
   ComentarioCriado: async (comentario) => {
-    const contemSpoiler = palavrasProibidas.some((p) => comentario.texto.includes(p))
-    comentario.status = contemSpoiler ? 'spoiler' : 'liberado'
+    let contemSpoiler = false
+
+    for(let i = 0; i < palavrasProibidas.length; i++){
+      if(comentario.texto.includes(palavrasProibidas[i])){
+        contemSpoiler = true
+      }
+    }
+
+    if(contemSpoiler){
+      comentario.status = 'spoiler'
+    }
+    else{
+      comentario.status = 'liberado'
+    }
+
     await axios.post(`http://${HOST}:10000/eventos`, {
       tipo: 'ComentarioModerado',
       dados: {
@@ -37,17 +51,30 @@ app.listen(port, async () => {
   try {
     const res = await axios.get(`http://${HOST}:10000/eventos`)
     const ultimoEventoPorComentario = {}
-    for (const evento of res.data) {
+    const idsComentarios = []
+
+    for (let i = 0; i < res.data.length; i++) {
+      const evento = res.data[i]
+
       if (
         evento.tipo === 'ComentarioCriado' ||
         evento.tipo === 'ComentarioEditado' ||
         evento.tipo === 'ComentarioModerado'
       ) {
-        ultimoEventoPorComentario[evento.dados.id] = evento
+        const idComentario = evento.dados.id
+
+        if (!ultimoEventoPorComentario[idComentario]) {
+          idsComentarios.push(idComentario)
+        }
+
+        ultimoEventoPorComentario[idComentario] = evento
       }
     }
-    for (const idComentario of Object.keys(ultimoEventoPorComentario)) {
+
+    for(let i = 0; i < idsComentarios.length; i++){
+      const idComentario = idsComentarios[i]
       const ultimoEvento = ultimoEventoPorComentario[idComentario]
+
       if (
         ultimoEvento.tipo === 'ComentarioCriado' ||
         ultimoEvento.tipo === 'ComentarioEditado'
