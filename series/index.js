@@ -7,10 +7,12 @@ app.use(express.json())
 let id = 1
 const series = {}
 
+//retorna todas as séries
 app.get('/series', (req, res) => {
   res.json(series)
 })
 
+//cadastra uma nova série
 app.post('/series', async (req, res) => {
   const { titulo, plataforma } = req.body
   if (titulo && plataforma) {
@@ -31,6 +33,7 @@ app.post('/series', async (req, res) => {
   }
 })
 
+//recebe os eventos
 app.post('/eventos', (req, res) => {
   console.log(req.body.tipo)
   res.end()

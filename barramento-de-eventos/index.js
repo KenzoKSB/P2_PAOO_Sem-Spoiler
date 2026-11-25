@@ -6,10 +6,12 @@ app.use(express.json())
 
 const eventos = []
 
+//retorna todos os eventos
 app.get('/eventos', (req, res) => {
   res.json(eventos)
 })
 
+//recebe e envia os eventos para os outros serviços
 app.post('/eventos', async (req, res) => {
   const evento = req.body
   eventos.push(evento)

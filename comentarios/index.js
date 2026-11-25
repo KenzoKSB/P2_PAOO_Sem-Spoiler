@@ -8,6 +8,7 @@ app.use(express.json())
 const comentariosPorSerieId = {}
 
 const funcoes = {
+  //atualiza o status do comentário
   ComentarioModerado: async (comentario) => {
     const comentarios = comentariosPorSerieId[comentario.serieId]
     if (comentarios) {
@@ -28,6 +29,7 @@ const funcoes = {
   }
 }
 
+//adiciona um novo comentário
 app.post('/series/:id/comentarios', async (req, res) => {
   const id = uuidv4()
   const { texto } = req.body
@@ -48,6 +50,7 @@ app.post('/series/:id/comentarios', async (req, res) => {
   res.status(201).json(comentariosDaSerie)
 })
 
+//edita um comentário existente
 app.put('/series/:id/comentarios/:idComentario', async (req, res) => {
   const comentariosDaSerie = comentariosPorSerieId[req.params.id]
   if (!comentariosDaSerie) {
@@ -71,10 +74,12 @@ app.put('/series/:id/comentarios/:idComentario', async (req, res) => {
   res.status(200).json(comentario)
 })
 
+//lista os comentários de uma série
 app.get('/series/:id/comentarios', (req, res) => {
   res.json(comentariosPorSerieId[req.params.id] || [])
 })
 
+//recebe os eventos enviados pelo barramento
 app.post('/eventos', async (req, res) => {
   console.log(req.body.tipo)
   try {

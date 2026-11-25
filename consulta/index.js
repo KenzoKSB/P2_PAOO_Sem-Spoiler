@@ -7,6 +7,7 @@ app.use(express.json())
 const baseConsulta = {}
 
 const funcoes = {
+  //adiciona uma série na consulta
   SerieCriada: (serie) => {
     baseConsulta[serie.id] = {
       id: serie.id,
@@ -15,6 +16,8 @@ const funcoes = {
       comentarios: []
     }
   },
+
+  //adiciona um comentário na série
   ComentarioCriado: (comentario) => {
     const serie = baseConsulta[comentario.serieId]
     if (serie) {
@@ -33,10 +36,12 @@ const funcoes = {
 }
 funcoes.ComentarioEditado = funcoes.ComentarioAtualizado
 
+//retorna todas as séries da consulta
 app.get('/series', (req, res) => {
   res.json(baseConsulta)
 })
 
+//busca uma série pelo id
 app.get('/series/:id', (req, res) => {
   const serie = baseConsulta[req.params.id]
   if (serie) {
@@ -46,6 +51,7 @@ app.get('/series/:id', (req, res) => {
   }
 })
 
+//recebe os eventos enviados pelo barramento
 app.post('/eventos', (req, res) => {
   try {
     const evento = req.body

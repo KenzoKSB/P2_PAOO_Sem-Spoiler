@@ -7,6 +7,7 @@ app.use(express.json())
 const palavrasProibidas = ['morre', 'final', 'assassino', 'traidor']
 
 const funcoes = {
+  //verifica se o comentário possui palavras proibidas
   ComentarioCriado: async (comentario) => {
     comentario.status = 'liberado'
     palavrasProibidas.forEach((palavra) => {
@@ -29,6 +30,7 @@ const funcoes = {
   }
 }
 
+//recebe os eventos enviados pelo barramento
 app.post('/eventos', async (req, res) => {
   try {
     await funcoes[req.body.tipo](req.body.dados)
@@ -43,6 +45,8 @@ app.listen(port, async () => {
     const resp = await axios.get(`http://${HOST}:10000/eventos`)
     const ultimoEventoPorId = {}
     const ids = []
+
+    //busca os últimos eventos de cada comentário
     resp.data.forEach((evento) => {
       try {
         if (evento.tipo === 'ComentarioCriado' || evento.tipo === 'ComentarioEditado' || evento.tipo === 'ComentarioModerado') {
@@ -53,6 +57,7 @@ app.listen(port, async () => {
         }
       } catch (e) {}
     })
+    //verifica os comentários que ainda precisam de moderação
     ids.forEach(async (id) => {
       const ultimo = ultimoEventoPorId[id]
       if (ultimo.tipo === 'ComentarioModerado') {
