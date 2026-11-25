@@ -76,6 +76,7 @@ app.get('/series/:id/comentarios', (req, res) => {
 })
 
 app.post('/eventos', async (req, res) => {
+  console.log(req.body.tipo)
   try {
     const evento = req.body
     await funcoes[evento.tipo](evento.dados)

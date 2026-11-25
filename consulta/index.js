@@ -58,12 +58,12 @@ const port = 4200
 app.listen(port, async () => {
   console.log(`Consulta. Porta ${port}.`)
   try {
-    const res = await axios.get(`http://${HOST}:10000/eventos`)
-    for (const evento of res.data) {
+    const resp = await axios.get(`http://${HOST}:10000/eventos`)
+    resp.data.forEach((evento) => {
       try {
         funcoes[evento.tipo](evento.dados)
       } catch (e) {}
-    }
+    })
   } catch (e) {
     console.log('Barramento indisponível')
   }
