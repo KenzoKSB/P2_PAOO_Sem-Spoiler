@@ -29,6 +29,7 @@ const funcoes = {
     }
   }
 }
+funcoes.ComentarioEditado = funcoes.ComentarioAtualizado
 
 app.get('/series', (req, res) => {
   res.json(baseConsulta)

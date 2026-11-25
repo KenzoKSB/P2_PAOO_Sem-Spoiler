@@ -20,6 +20,7 @@ const funcoes = {
     })
   }
 }
+funcoes.ComentarioEditado = funcoes.ComentarioCriado
 
 app.post('/eventos', async (req, res) => {
   try {
