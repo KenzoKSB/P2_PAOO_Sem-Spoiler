@@ -18,6 +18,15 @@ const funcoes = {
     if (serie) {
       serie.comentarios.push(comentario)
     }
+  },
+  ComentarioAtualizado: (comentario) => {
+    const serie = baseConsulta[comentario.serieId]
+    if (serie) {
+      const indice = serie.comentarios.findIndex((c) => c.id === comentario.id)
+      if (indice !== -1) {
+        serie.comentarios[indice] = comentario
+      }
+    }
   }
 }
 

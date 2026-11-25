@@ -14,6 +14,9 @@ app.post('/eventos', async (req, res) => {
   try {
     await axios.post('http://localhost:4200/eventos', evento)
   } catch (e) {}
+  try {
+    await axios.post('http://localhost:4300/eventos', evento)
+  } catch (e) {}
   res.end()
 })
 
