@@ -1,3 +1,4 @@
+const axios = require('axios')
 const express = require('express')
 const app = express()
 app.use(express.json())
@@ -53,4 +54,16 @@ app.post('/eventos', (req, res) => {
 })
 
 const port = 4200
-app.listen(port, () => console.log(`Consulta. Porta ${port}.`))
+app.listen(port, async () => {
+  console.log(`Consulta. Porta ${port}.`)
+  try {
+    const res = await axios.get('http://localhost:10000/eventos')
+    for (const evento of res.data) {
+      try {
+        funcoes[evento.tipo](evento.dados)
+      } catch (e) {}
+    }
+  } catch (e) {
+    console.log('Barramento indisponível')
+  }
+})
